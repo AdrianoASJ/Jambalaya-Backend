@@ -37,7 +37,7 @@ def sign_up(request):
 
         conta.save()
 
-        conta_retornada = Account.objects.filter(email=email)
+        conta_retornada = Account.objects.get(email=email)
 
         feedback = {
             "id": conta_retornada.id,
