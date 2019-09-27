@@ -37,10 +37,17 @@ def sign_up(request):
 
         conta.save()
 
-        # t = Token(user=conta)
-        # t.save()
+        conta_retornada = Account.objects.filter(email=email)
 
-        return Response({'status': 200, 'message': 'Conta criada com sucesso'})
+        feedback = {
+            "id": conta_retornada.id,
+            "nome": conta_retornada.name,
+            "email": conta_retornada.email,
+            "cidade": conta_retornada.city,
+            "telefone": conta_retornada.cellphone,
+        }
+
+        return Response({'status': 200, 'message': 'Conta criada com sucesso', "conta": feedback})
     except Exception as e:
         return Response({'status': 300, 'message': 'Erro ao cadastrar verifique os campos preenchidos', 'error': e})
 
