@@ -37,15 +37,7 @@ def sign_up(request):
 
         conta.save()
 
-        conta_retornada = Account.objects.get(email=email)
-
-        feedback = {
-            "id": conta_retornada.id,
-            "nome": conta_retornada.name,
-            "email": conta_retornada.email,
-            "cidade": conta_retornada.city,
-            "telefone": conta_retornada.cellphone,
-        }
+        feedback = AccountSerializer(Account.objects.filter(email=email), many=True).data
 
         return Response({'status': 200, 'message': 'Conta criada com sucesso', "conta": feedback})
     except Exception as e:
@@ -69,15 +61,7 @@ def login(request):
         if not valid:
             return Response({"status": 600, "success": False, "message": "Senha Invalida", "Conta": None})
 
-        # conta_serializer = AccountSerializer(conta)
-
-        feedback = {
-            "id": conta.id,
-            "nome": conta.name,
-            "email": conta.email,
-            "cidade": conta.city,
-            "telefone": conta.cellphone,
-        }
+        feedback = AccountSerializer(Account.objects.filter(email=email), many=True).data
 
         return Response({"status": 200, "success": True, "message": "Login efetuado", "Conta": feedback})
     except Exception as e:

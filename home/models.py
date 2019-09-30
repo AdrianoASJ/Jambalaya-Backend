@@ -19,3 +19,17 @@ class Account(User):
         return self.name
 
 
+class Hotel(models.Model):
+    name = models.CharField(verbose_name='Nome', max_length=255)
+    photo = models.FileField(verbose_name="Foto do Hotel")
+    latitude = models.CharField(verbose_name="Latitude", max_length=100)
+    longitude = models.CharField(verbose_name="Longitude", max_length=100)
+    price = models.IntegerField(verbose_name="Preço")
+
+    class Meta:
+        verbose_name = "Hotel"
+        verbose_name_plural = "Hotéis"
+
+    def __str__(self):
+        return self.name
+

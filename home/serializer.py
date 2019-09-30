@@ -6,4 +6,5 @@ class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         depth = 1
-        fields = '__all__'
+        fields = ('id', 'name', 'email', 'city', 'cellphone')
+
