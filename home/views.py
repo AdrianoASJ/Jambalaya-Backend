@@ -24,7 +24,7 @@ def sign_up(request):
         password_encrypted = password_encrypting.encode(password, 'seasalt2')
 
         if Account.objects.filter(email=email).count() >= 1:
-            return Response({'status': 800, 'success': False, 'message': 'Já existe um usuário com esse CPF'})
+            return Response({'status': 800, 'success': False, 'message': 'Já existe um usuário com esse email'})
 
         conta = Account()
 
@@ -68,6 +68,16 @@ def login(request):
         return Response({"status": 300, "success": False, "message": "Login erro", "Conta": None, 'error': e})
 
 
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def search_hotels(request):
+    try:
+
+        feedback = HotelSerializer(Hotel.objects.all(), many=True).data
+
+        return Response({"status": 200, "success": True, "message": "Retornando todos Hoteis", "Conta": feedback})
+    except Exception as e:
+        return Response({"status": 300, "success": False, "message": "search_hotels erro", 'error': e})
 
 
 
