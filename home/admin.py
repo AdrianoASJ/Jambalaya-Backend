@@ -9,3 +9,10 @@ class AccountAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Account, AccountAdmin)
+
+
+class HotelAdmin(admin.ModelAdmin):
+    list_display = ["name", "price"]
+
+
+admin.site.register(Hotel, HotelAdmin)

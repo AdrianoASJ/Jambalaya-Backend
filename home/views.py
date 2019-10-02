@@ -37,10 +37,9 @@ def sign_up(request):
 
         conta.save()
 
-        # t = Token(user=conta)
-        # t.save()
+        feedback = AccountSerializer(Account.objects.filter(email=email), many=True).data
 
-        return Response({'status': 200, 'message': 'Conta criada com sucesso'})
+        return Response({'status': 200, 'message': 'Conta criada com sucesso', "conta": feedback})
     except Exception as e:
         return Response({'status': 300, 'message': 'Erro ao cadastrar verifique os campos preenchidos', 'error': e})
 
@@ -62,21 +61,23 @@ def login(request):
         if not valid:
             return Response({"status": 600, "success": False, "message": "Senha Invalida", "Conta": None})
 
-        # conta_serializer = AccountSerializer(conta)
-
-        feedback = {
-            "id": conta.id,
-            "nome": conta.name,
-            "email": conta.email,
-            "cidade": conta.city,
-            "telefone": conta.cellphone,
-        }
+        feedback = AccountSerializer(Account.objects.filter(email=email), many=True).data
 
         return Response({"status": 200, "success": True, "message": "Login efetuado", "Conta": feedback})
     except Exception as e:
         return Response({"status": 300, "success": False, "message": "Login erro", "Conta": None, 'error': e})
 
 
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def search_hotels(request):
+    try:
+
+        feedback = HotelSerializer(Hotel.objects.all(), many=True).data
+
+        return Response({"status": 200, "success": True, "message": "Retornando todos Hoteis", "Conta": feedback})
+    except Exception as e:
+        return Response({"status": 300, "success": False, "message": "search_hotels erro", 'error': e})
 
 
 
