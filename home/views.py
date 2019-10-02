@@ -24,7 +24,7 @@ def sign_up(request):
         password_encrypted = password_encrypting.encode(password, 'seasalt2')
 
         if Account.objects.filter(email=email).count() >= 1:
-            return Response({'status': 800, 'success': False, 'message': 'Já existe um usuário com esse CPF'})
+            return Response({'status': 800, 'success': False, 'message': 'Já existe um usuário com esse email'})
 
         conta = Account()
 
