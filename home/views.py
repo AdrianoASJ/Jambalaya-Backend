@@ -29,7 +29,7 @@ def sign_up(request):
         conta = Account()
 
         conta.name = name
-        conta.username = name
+        conta.username = email
         conta.email = email
         conta.cellphone = cellphone
         conta.city = city
