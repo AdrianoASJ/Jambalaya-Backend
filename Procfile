@@ -1,0 +1,1 @@
+web: gunicorn Jambalaya.wsgi --log-file -
