@@ -1,12 +1,19 @@
 from django.contrib.auth.hashers import PBKDF2PasswordHasher
 from .models import *
 from .serializer import *
+import requests
+import json
+
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from django.contrib.auth.hashers import check_password
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from django.contrib.auth.models import User
 
 
@@ -45,7 +52,8 @@ def sign_up(request):
 
 
 @api_view(['POST'])
-@permission_classes([AllowAny])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
 def login(request):
     try:
         email = request.data.get("email")
@@ -80,9 +88,25 @@ def search_hotels(request):
         return Response({"status": 300, "success": False, "message": "search_hotels erro", 'error': e})
 
 
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def place_search(request):
+    try:
+        key = "AIzaSyADfFDApH-HJrbmaXnerTiJPK2ZCLA6BU0"
 
+        latitude = request.data.get("latitude")
+        longitude = request.data.get("longitude")
+        radius = "1500"
+        type = "hotel"
+        keyword = ""
 
+        result = requests.get(
+            'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=' + latitude + ',' + longitude + '&radius=' + radius + '&type=' + type + '&keyword=' + keyword + '&key=' + key + '')
 
+        compare = requests.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=hotel&keyword=cruise&key=AIzaSyADfFDApH-HJrbmaXnerTiJPK2ZCLA6BU0')
 
+        new_result = result.json()
 
-
+        return Response({"status": 200, "success": True, "message": "Retornando todos Hoteis", "return": new_result})
+    except Exception as e:
+        return Response({"status": 300, "success": False, "message": "place_search erro", 'error': e})
