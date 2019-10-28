@@ -48,12 +48,12 @@ def sign_up(request):
 
         return Response({'status': 200, 'message': 'Conta criada com sucesso', "conta": feedback})
     except Exception as e:
+        print(e)
         return Response({'status': 300, 'message': 'Erro ao cadastrar verifique os campos preenchidos', 'error': e})
 
 
 @api_view(['POST'])
-@authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def login(request):
     try:
         email = request.data.get("email")
