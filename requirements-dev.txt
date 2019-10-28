@@ -1,9 +1,15 @@
+certifi==2019.9.11
+chardet==3.0.4
 dj-database-url==0.5.0
 dj-static==0.0.6
 Django==2.2.6
 django-cors-headers==3.1.0
 djangorestframework==3.10.3
+gunicorn==19.9.0
+idna==2.8
 python-decouple==3.1
 pytz==2019.2
+requests==2.22.0
 sqlparse==0.3.0
 static3==0.7.0
+urllib3==1.25.6
