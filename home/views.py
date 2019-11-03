@@ -128,10 +128,10 @@ def photo_return(request):
         compare = requests.get(
             'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=CmRaAAAAnYSxXLPKKumBoU5oARtqBubbUIToDpNfm-tWPCc9TCmnkgDaO93eAljes_2tQq7fxyIPMuOvmne00AqvOOD6wcOUH_qh6f3s6yS1RIvjXV047heIgr7FSY5I1lMQlc8WEhDPjrOjQhH3UJam3kw9sQaoGhQIjCSntQlPm3Q-vWenl1CWkZaVfQ&key=AIzaSyADfFDApH-HJrbmaXnerTiJPK2ZCLA6BU0')
 
-        new_result = result.json()
+        new_result = result.url
 
         return Response(
-            {"status": 200, "success": True, "message": "Retornando foto de estabelecimento", "return": new_result})
+            {"status": 200, "success": True, "message": "Retornando foto de estabelecimento", "return_url": new_result})
     except Exception as e:
         return Response({"status": 300, "success": False, "message": "photo_return erro", 'error': e})
 
