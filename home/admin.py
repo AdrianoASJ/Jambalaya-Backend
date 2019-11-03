@@ -12,7 +12,7 @@ admin.site.register(Account, AccountAdmin)
 
 
 class HotelAdmin(admin.ModelAdmin):
-    list_display = ["name", "price"]
+    list_display = ["name", "checkin", "checkout"]
 
 
 admin.site.register(Hotel, HotelAdmin)

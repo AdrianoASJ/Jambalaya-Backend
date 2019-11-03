@@ -103,10 +103,67 @@ def place_search(request):
         result = requests.get(
             'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=' + latitude + ',' + longitude + '&radius=' + radius + '&type=' + type + '&keyword=' + keyword + '&key=' + key + '')
 
-        compare = requests.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=hotel&keyword=cruise&key=AIzaSyADfFDApH-HJrbmaXnerTiJPK2ZCLA6BU0')
+        compare = requests.get(
+            'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=hotel&keyword=cruise&key=AIzaSyADfFDApH-HJrbmaXnerTiJPK2ZCLA6BU0')
 
         new_result = result.json()
 
         return Response({"status": 200, "success": True, "message": "Retornando todos Hoteis", "return": new_result})
     except Exception as e:
         return Response({"status": 300, "success": False, "message": "place_search erro", 'error': e})
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def photo_return(request):
+    try:
+        key = "AIzaSyADfFDApH-HJrbmaXnerTiJPK2ZCLA6BU0"
+
+        maxwidth = "400"  # tamanho da foto a ser retornada
+        photoreference = request.data.get("photoreference")
+
+        result = requests.get(
+            'https://maps.googleapis.com/maps/api/place/photo?maxwidth=' + maxwidth + '&photoreference=' + photoreference + '&key=' + key + '')
+
+        compare = requests.get(
+            'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=CmRaAAAAnYSxXLPKKumBoU5oARtqBubbUIToDpNfm-tWPCc9TCmnkgDaO93eAljes_2tQq7fxyIPMuOvmne00AqvOOD6wcOUH_qh6f3s6yS1RIvjXV047heIgr7FSY5I1lMQlc8WEhDPjrOjQhH3UJam3kw9sQaoGhQIjCSntQlPm3Q-vWenl1CWkZaVfQ&key=AIzaSyADfFDApH-HJrbmaXnerTiJPK2ZCLA6BU0')
+
+        new_result = result.json()
+
+        return Response(
+            {"status": 200, "success": True, "message": "Retornando foto de estabelecimento", "return": new_result})
+    except Exception as e:
+        return Response({"status": 300, "success": False, "message": "photo_return erro", 'error': e})
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def reserve(request):
+    try:
+        account_id = request.data.get("account_id")
+        establishment_name = request.data.get("establishment_name")
+        childrens = request.data.get("childrens")
+        adults = request.data.get("adults")
+        babies = request.data.get("babies")
+        checkin = request.data.get("checkin")
+        checkout = request.data.get("checkout")
+
+        if Account.objects.filter(pk=account_id).count() == 0:
+            return Response({"status": 500, "message": "Este usuario nao esta cadastrado em nosso banco de dados", "Conta": None})
+
+        user = Account.objects.get(pk=account_id)
+
+        new_hotel = Hotel()
+        new_hotel.user = user
+        new_hotel.name = establishment_name
+        new_hotel.qtd_criancas = childrens
+        new_hotel.qtd_adultos = adults
+        new_hotel.qtd_bebes = babies
+        new_hotel.checkin = checkin
+        new_hotel.checkout = checkout
+
+        new_hotel.save()
+        return Response(
+            {"status": 200, "success": True, "message": "Reserva concedida"})
+    except Exception as e:
+        return Response({"status": 300, "success": False, "message": "reserve erro", 'error': e})

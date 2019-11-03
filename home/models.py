@@ -20,16 +20,18 @@ class Account(User):
 
 
 class Hotel(models.Model):
-    name = models.CharField(verbose_name='Nome', max_length=255)
-    photo = models.FileField(verbose_name="Foto do Hotel")
-    latitude = models.CharField(verbose_name="Latitude", max_length=100)
-    longitude = models.CharField(verbose_name="Longitude", max_length=100)
-    price = models.IntegerField(verbose_name="Preço")
+    user = models.ForeignKey(Account, on_delete=models.CASCADE,
+                             verbose_name="Usuario Da Reserva", blank=True, null=True)
+    name = models.CharField(verbose_name='Nome do Hotel', max_length=255)
+    qtd_criancas = models.CharField(verbose_name="Quantidade de Crianças", max_length=2, blank=True, null=True)
+    qtd_adultos = models.CharField(verbose_name="Quantidade de Adultos", max_length=2, blank=True, null=True)
+    qtd_bebes = models.CharField(verbose_name="Quantidade de Bebes", max_length=2, blank=True, null=True)
+    checkin = models.CharField(verbose_name="Data de Entrada (Checkin)", max_length=100)
+    checkout = models.CharField(verbose_name="Data de Saida (Checkout)", max_length=100)
 
     class Meta:
-        verbose_name = "Hotel"
-        verbose_name_plural = "Hotéis"
+        verbose_name = "Reserva de Hotel"
+        verbose_name_plural = "Reserva de Hotéis"
 
     def __str__(self):
         return self.name
-
