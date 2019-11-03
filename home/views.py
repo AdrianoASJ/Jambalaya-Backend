@@ -170,7 +170,7 @@ def reserve(request):
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
-def user_reserves(request):
+def user_reservation(request):
     try:
         account_id = request.data.get("account_id")
 
