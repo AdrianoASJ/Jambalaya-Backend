@@ -167,3 +167,19 @@ def reserve(request):
             {"status": 200, "success": True, "message": "Reserva concedida"})
     except Exception as e:
         return Response({"status": 300, "success": False, "message": "reserve erro", 'error': e})
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def user_reserves(request):
+    try:
+        account_id = request.data.get("account_id")
+
+        user = Account.objects.get(pk=account_id)
+
+        hotels = HotelSerializer(Hotel.objects.filter(user__pk=account_id), many=True).data
+
+        return Response({"status": 200, "success": True, "message": "Retornando todos hoteis reservados pelo usuario",
+                         "user_hotels": hotels})
+    except Exception as e:
+        return Response({"status": 300, "success": False, "message": "user_reserves erro", 'error': e})
+

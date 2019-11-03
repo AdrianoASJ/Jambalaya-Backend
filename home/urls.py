@@ -8,4 +8,5 @@ urlpatterns = [
     url('place_search', views.place_search),
     url('reserve', views.reserve),
     url('hotel_photo', views.photo_return),
+    url('user_reserves', views.user_reserves)
 ]
