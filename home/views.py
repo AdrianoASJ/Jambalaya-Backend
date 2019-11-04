@@ -183,3 +183,21 @@ def user_reservation(request):
     except Exception as e:
         return Response({"status": 300, "success": False, "message": "user_reserves erro", 'error': e})
 
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def details_place(request):
+    try:
+        place_id = request.data.get("place_id")
+        key = "AIzaSyADfFDApH-HJrbmaXnerTiJPK2ZCLA6BU0"
+        fields = 'name,rating,formatted_address,formatted_phone_number,photos,reviews,user_ratings_total'
+
+        result = requests.get('https://maps.googleapis.com/maps/api/place/details/json?place_id=' + place_id + '&fields=' + fields + '&key=' + key + '')
+
+        # compare = request.get('https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyADfFDApH-HJrbmaXnerTiJPK2ZCLA6BU0&fields=name,rating,formatted_address,formatted_phone_number,photos,reviews,user_ratings_total&place_id=ChIJmXIDXatJxwcRrgUPNSjikyQ')
+        new_result = result.json()
+
+        valor = 0
+        return Response({"status": 200, "success": True, "message": "Retornando todos detalhes do Hotel",
+                            "details": new_result, "price": valor})
+    except Exception as e:
+        return Response({"status": 300, "success": False, "message": "user_reserves erro", 'error': e})
