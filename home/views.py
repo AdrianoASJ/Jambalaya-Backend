@@ -183,7 +183,7 @@ def user_reservation(request):
     except Exception as e:
         return Response({"status": 300, "success": False, "message": "user_reserves erro", 'error': e})
 
-@api_view(['GET'])
+@api_view(['POST'])
 @permission_classes([AllowAny])
 def details_place(request):
     try:
