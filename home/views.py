@@ -190,14 +190,27 @@ def details_place(request):
         place_id = request.data.get("place_id")
         key = "AIzaSyADfFDApH-HJrbmaXnerTiJPK2ZCLA6BU0"
         fields = 'name,rating,formatted_address,formatted_phone_number,photos,reviews,user_ratings_total'
+        count = 0
+        lista_de_urls = []
 
         result = requests.get('https://maps.googleapis.com/maps/api/place/details/json?place_id=' + place_id + '&fields=' + fields + '&key=' + key + '')
 
         # compare = request.get('https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyADfFDApH-HJrbmaXnerTiJPK2ZCLA6BU0&fields=name,rating,formatted_address,formatted_phone_number,photos,reviews,user_ratings_total&place_id=ChIJmXIDXatJxwcRrgUPNSjikyQ')
         new_result = result.json()
 
+        maxwidth = "400"  # tamanho da foto a ser retornada
+
+        while count < len(new_result['result']['photos']):
+            photoreference = new_result['result']['photos'][count]['photo_reference']
+
+            photo_url = requests.get('https://maps.googleapis.com/maps/api/place/photo?maxwidth=' + maxwidth + '&photoreference=' + photoreference + '&key=' + key + '')
+
+            lista_de_urls.append(photo_url.url)
+
+            count += 1
+
         valor = 0
         return Response({"status": 200, "success": True, "message": "Retornando todos detalhes do Hotel",
-                            "details": new_result, "price": valor})
+                            "details": new_result, "lista_urls": lista_de_urls, "price": valor})
     except Exception as e:
         return Response({"status": 300, "success": False, "message": "user_reserves erro", 'error': e})
