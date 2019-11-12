@@ -147,9 +147,12 @@ def reserve(request):
         babies = request.data.get("babies")
         checkin = request.data.get("checkin")
         checkout = request.data.get("checkout")
+        hotel_name = request.data.get("hotel_name")
+        hotel_phone = request.data.get("hotel_phone")
 
         if Account.objects.filter(pk=account_id).count() == 0:
-            return Response({"status": 500, "message": "Este usuario nao esta cadastrado em nosso banco de dados", "Conta": None})
+            return Response(
+                {"status": 500, "message": "Este usuario nao esta cadastrado em nosso banco de dados", "Conta": None})
 
         user = Account.objects.get(pk=account_id)
 
@@ -161,12 +164,15 @@ def reserve(request):
         new_hotel.qtd_bebes = babies
         new_hotel.checkin = checkin
         new_hotel.checkout = checkout
+        new_hotel.hotel_name = hotel_name
+        new_hotel.hotel_phone = hotel_phone
 
         new_hotel.save()
         return Response(
             {"status": 200, "success": True, "message": "Reserva concedida"})
     except Exception as e:
         return Response({"status": 300, "success": False, "message": "reserve erro", 'error': e})
+
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -183,6 +189,7 @@ def user_reservation(request):
     except Exception as e:
         return Response({"status": 300, "success": False, "message": "user_reserves erro", 'error': e})
 
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def details_place(request):
@@ -190,27 +197,30 @@ def details_place(request):
         place_id = request.data.get("place_id")
         key = "AIzaSyADfFDApH-HJrbmaXnerTiJPK2ZCLA6BU0"
         fields = 'name,rating,formatted_address,formatted_phone_number,photos,reviews,user_ratings_total'
-        count = 0
-        lista_de_urls = []
 
-        result = requests.get('https://maps.googleapis.com/maps/api/place/details/json?place_id=' + place_id + '&fields=' + fields + '&key=' + key + '')
+        result = requests.get(
+            'https://maps.googleapis.com/maps/api/place/details/json?place_id=' + place_id + '&fields=' + fields + '&key=' + key + '')
 
         # compare = request.get('https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyADfFDApH-HJrbmaXnerTiJPK2ZCLA6BU0&fields=name,rating,formatted_address,formatted_phone_number,photos,reviews,user_ratings_total&place_id=ChIJmXIDXatJxwcRrgUPNSjikyQ')
         new_result = result.json()
 
-        maxwidth = "400"  # tamanho da foto a ser retornada
-
-        while count < len(new_result['result']['photos']):
-            photoreference = new_result['result']['photos'][count]['photo_reference']
-
-            photo_url = requests.get('https://maps.googleapis.com/maps/api/place/photo?maxwidth=' + maxwidth + '&photoreference=' + photoreference + '&key=' + key + '')
-
-            lista_de_urls.append(photo_url.url)
-
-            count += 1
-
-        valor = 0
+        valor = new_result["result"]["rating"] * new_result["result"]["user_ratings_total"]
         return Response({"status": 200, "success": True, "message": "Retornando todos detalhes do Hotel",
-                            "details": new_result, "lista_urls": lista_de_urls, "price": valor})
+                         "details": new_result, "price": valor})
     except Exception as e:
         return Response({"status": 300, "success": False, "message": "user_reserves erro", 'error': e})
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def remove_reservation(request):
+    try:
+        hotel_id = request.data.get("hotel_id")
+
+        hotel = Hotel.objects.filter(pk=hotel_id)
+
+        hotel.delete()
+
+        return Response({"status": 200, "success": True, "message": "Reserva removida com sucesso"})
+    except Exception as e:
+        return Response({"status": 300, "success": False, "message": "remove_reservation", 'error': e})

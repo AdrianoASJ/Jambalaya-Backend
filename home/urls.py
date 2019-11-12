@@ -9,5 +9,6 @@ urlpatterns = [
     url('reserve', views.reserve),
     url('hotel_photo', views.photo_return),
     url('user_reservation', views.user_reservation),
-    url('details_place', views.details_place)
+    url('details_place', views.details_place),
+    url('remove_reservation', views.remove_reservation)
 ]

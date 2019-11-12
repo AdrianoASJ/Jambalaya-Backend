@@ -28,6 +28,8 @@ class Hotel(models.Model):
     qtd_bebes = models.CharField(verbose_name="Quantidade de Bebes", max_length=2, blank=True, null=True)
     checkin = models.CharField(verbose_name="Data de Entrada (Checkin)", max_length=100)
     checkout = models.CharField(verbose_name="Data de Saida (Checkout)", max_length=100)
+    hotel_name = models.CharField(verbose_name="Nome do Hotel", max_length=300, null=True, blank=True)
+    hotel_phone = models.CharField(verbose_name="Telefone do Hotel", max_length=20, null=True, blank=True)
 
     class Meta:
         verbose_name = "Reserva de Hotel"
